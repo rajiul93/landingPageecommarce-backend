@@ -1,20 +1,19 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from "express";
 
-import sendResponse from '../../utils/sendResponse';
-import { AuthService } from './auth.service';
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
+import { AuthService } from "./auth.service";
 
-export const AuthController = {
-  loginUser: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await AuthService.loginUser(req.body);
-      sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: 'User logged in successfully!',
-        data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
-};
+const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await AuthService.loginUser(req.body);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "User logged in successfully!",
+      data: result,
+    });
+  }
+);
+
+export const authController = { login };

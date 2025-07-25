@@ -1,18 +1,71 @@
-import { User } from '../user/user.model';
+import bcrypt from "bcrypt";
+import httpStatus from "http-status";
+import jwt from "jsonwebtoken";
+import config from "../../../config";
+import AppError from "../../error/AppError";
+import { UserModel } from "../users/user/user.model";
 
 export const AuthService = {
-  loginUser: async ({ email, password }: { email: string; password: string }) => {
-    const user = await User.findOne({ email });
+  loginUser: async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    // 1️⃣ Find user by email
+    const user = await UserModel.findOne({ email });
     if (!user) {
-      throw new Error('User not found');
+      throw new AppError(httpStatus.NOT_FOUND, "User not found");
     }
 
-    // এখানে সরলভাবে password মেলাচ্ছি (production এ অবশ্যই bcrypt/hash check করবে)
-    if (user.password !== password) {
-      throw new Error('Incorrect password');
+    // 2️⃣ Check if user is deleted
+    if (user.isDeleted) {
+      throw new AppError(httpStatus.FORBIDDEN, "User is deleted");
     }
 
-    // এখানে চাইলে JWT token generate করতে পারো
-    return user;
+    // 3️⃣ Check if user status is active
+    if (user.status !== "active") {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        `Cannot login, user status is ${user.status}`
+      );
+    }
+
+    // 4️⃣ Validate password with bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "Incorrect password");
+    }
+
+    // 5️⃣ Optional: Check needsPasswordChange
+    // if (user.needsPasswordChange) {
+    //   throw new AppError(httpStatus.FORBIDDEN, 'User needs to change password first');
+    // }
+
+    // 6️⃣ Generate JWT token
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+      },
+      config.jwt_secret,
+      {
+        expiresIn: '1d',
+      }
+    );
+// expiresIn: config.jwt_expires_in
+    // 7️⃣ Return safe data (never return password)
+    return {
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
+    };
   },
 };

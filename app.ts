@@ -1,10 +1,11 @@
-import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import express, { Application, Request, Response } from 'express';
 
 import globalErrorHandler from './src/app/middleware/globalErrorHandler';
-import { userRoutes } from './src/app/modules/user/user.route';
-import { authRoutes } from './src/app/modules/auth/auth.route';
 import notFound from './src/app/middleware/notFound';
+import { authRoutes } from './src/app/modules/auth/auth.route';
+import { userRoutes } from './src/app/modules/users/user/user.route';
+import { userDetailsRoutes } from './src/app/modules/users/userDetails/userDetails.route';
 
 const app: Application = express();
 
@@ -14,11 +15,12 @@ app.use(express.json());
 
 // routes
 app.use('/api/users', userRoutes);
+app.use('/api/users/details', userDetailsRoutes);
 app.use('/api/auth', authRoutes);
 
 // test route
 app.get('/', (req: Request, res: Response) => {
-  res.send('Ecommerce backend running!');
+  res.send('E-commerce backend running!');
 });
 
 // global error handler

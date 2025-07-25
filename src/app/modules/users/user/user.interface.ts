@@ -5,6 +5,6 @@ export interface IUser {
   needsPasswordChange?: boolean;
   passwordChangedAt?: Date | null;
   role?: 'superAdmin' | 'admin' | 'user';
-  status?: 'in-progress' | 'blocked';
+  status?: 'in-progress' | 'blocked' | 'active';
   isDeleted?: boolean;
 }
