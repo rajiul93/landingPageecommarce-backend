@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const createUserDetailsZodSchema = z.object({
   body: z.object({
-    userId: z.string(),
+    userId: z.string().optional(),
     phone: z.string().optional(),
     profileImage: z.string().url().optional(),
     addresses: z

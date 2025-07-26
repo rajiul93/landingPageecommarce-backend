@@ -59,11 +59,9 @@ export const AuthService = {
     // 7️⃣ Return safe data (never return password)
     return {
       token,
-      user: {
+      user: { 
         id: user._id,
         name: user.name,
-        email: user.email,
-        role: user.role,
         status: user.status,
       },
     };

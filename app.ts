@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
 
+import cookieParser from 'cookie-parser';
 import globalErrorHandler from './src/app/middleware/globalErrorHandler';
 import notFound from './src/app/middleware/notFound';
 import { authRoutes } from './src/app/modules/auth/auth.route';
@@ -12,6 +13,7 @@ const app: Application = express();
 // middlewares
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // routes
 app.use('/api/users', userRoutes);
