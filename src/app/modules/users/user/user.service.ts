@@ -5,16 +5,15 @@ import AppError from "../../../error/AppError";
 import { UserDetails } from "../userDetails/userDetails.model";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
+import httpStatus from "http-status";
 
-export const createUser = async (userData: IUser): Promise<string> => {
+const createUser = async (userData: IUser): Promise<string> => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     // 1. Check if user exists
-    const isExist = await UserModel.findOne({ email: userData.email }).session(
-      session
-    );
+    const isExist = await UserModel.findOne({ email: userData.email }).session(session);
     if (isExist) {
       throw new AppError(409, "User already exists");
     }
@@ -25,12 +24,13 @@ export const createUser = async (userData: IUser): Promise<string> => {
       Number(config.bcrypt_salt_rounds)
     );
 
-    // 3. Create user
+    // 3. Create user (without userDetails initially)
     const createdUser = await UserModel.create(
       [
         {
           name: userData.name,
           email: userData.email,
+          phone: userData.phone,
           password: hashedPassword,
           isDeleted: false,
           needsPasswordChange: false,
@@ -41,34 +41,48 @@ export const createUser = async (userData: IUser): Promise<string> => {
       { session }
     );
 
-    // 4. Create userDetails with default empty fields
+    // 4. Create UserDetails referencing userId
     await UserDetails.create(
-      [
-        {
-          userId: createdUser[0]._id.toString(),
-          phone: "",
-          profileImage: "",
-          addresses: [],
-          wishlist: [],
-          cart: [],
-        },
-      ],
+      {
+        userId: createdUser[0]._id,    // এখানে দিতে হবে
+        profileImage: "",
+        addresses: [],
+        wishlist: [],
+        cart: [],
+      },
       { session }
     );
 
-    // 5. Commit transaction
+    // 5. Commit
     await session.commitTransaction();
-    session.endSession();
-
     return "User created successfully";
   } catch (error) {
-    // 6. Rollback transaction on error
     await session.abortTransaction();
-    session.endSession();
     throw error;
+  } finally {
+    session.endSession();
   }
 };
+// Get all users
+const getAllUsers = async () => {
+  const users = await UserModel.find()
+    .select('_id name email phone userDetails') // Only include these fields
+    .lean(); // Convert to plain JS object
+  
+  return users;
+};
 
+const getSingleUser = async (userId: string) => {
+  const user = await UserModel.findById(userId).select('-password'); // Exclude password
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  return user;
+};
 export const userService = {
   createUser,
+  getAllUsers,
+  getSingleUser
 };

@@ -1,6 +1,10 @@
+import { Types } from "mongoose";
+
 export interface IUser {
   name: string;
   email: string;
+  phone:string;
+  userDetails:Types.ObjectId;
   password: string;
   needsPasswordChange?: boolean;
   passwordChangedAt?: Date | null;

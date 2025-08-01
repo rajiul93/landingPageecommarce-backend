@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv';  
+import config from './config';
 import app from './app';
-import config from './src/config';
+ 
  
 
 dotenv.config();

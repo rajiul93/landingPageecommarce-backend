@@ -8,7 +8,7 @@ export const auth = (...requiredRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       // cookie থেকে token নাও
-      const token = req.cookies?.accessToken;
+      const token = req.cookies?.accessToken; 
 
       if (!token) {
         return res.status(401).json({

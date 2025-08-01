@@ -3,35 +3,26 @@ import httpStatus from "http-status";
 
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
-import * as userDetailsService from "./userDetails.service";
+import { userDetailsServer } from "./userDetails.service";
+import AppError from "../../../error/AppError";
 
- 
-// Get user details
-const getUserDetails = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.cookies)
-  const userId = req.params.userId;
-  const result = await userDetailsService.getUserDetailsByUserId(userId);
+// user details update
+const updateProfileDetails = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const updateData = req.body;
+  const result = await userDetailsServer.updateProfileDetails(
+    userId,
+    updateData
+  );
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User details retrieved successfully",
+    message: "Success",
     data: result,
   });
 });
 
-// Update user details
-const updateUserDetails = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.userId; 
-  const result = await userDetailsService.updateUserDetails(userId, req.body);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "User details updated successfully",
-    data: result,
-  });
-});
-
-export const userDetailsController = { 
-  updateUserDetails,
-  getUserDetails,
+export const userDetailsController = {
+  updateProfileDetails,
 };

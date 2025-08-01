@@ -2,11 +2,12 @@ import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
 
 import cookieParser from 'cookie-parser';
-import globalErrorHandler from './src/app/middleware/globalErrorHandler';
-import notFound from './src/app/middleware/notFound';
-import { authRoutes } from './src/app/modules/auth/auth.route';
-import { userRoutes } from './src/app/modules/users/user/user.route';
-import { userDetailsRoutes } from './src/app/modules/users/userDetails/userDetails.route';
+import globalErrorHandler from './app/middleware/globalErrorHandler';
+import { userRoutes } from './app/modules/users/user/user.route';
+import { userDetailsRoutes } from './app/modules/users/userDetails/userDetails.route';
+import { authRoutes } from './app/modules/auth/auth.route';
+import notFound from './app/middleware/notFound';
+ 
 
 const app: Application = express();
 

@@ -30,7 +30,7 @@ export const AuthService = {
         httpStatus.FORBIDDEN,
         `Cannot login, user status is ${user.status}`
       );
-    }
+    } 
 
     // 4️⃣ Validate password with bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);

@@ -1,11 +1,10 @@
 import { Schema, model } from 'mongoose';
 import { IUserDetails } from './userDetails.interface';
+import { boolean } from 'zod';
 
 
 const userDetailsSchema = new Schema<IUserDetails>(
   {
-    userId: { type: String, required: true, unique: true },
-    phone: { type: String },
     profileImage: { type: String },
     addresses: [
       {
@@ -15,6 +14,7 @@ const userDetailsSchema = new Schema<IUserDetails>(
         state: String,
         postalCode: String,
         country: String,
+        isDefault:Boolean
       },
     ],
     wishlist: [{ type: String }],

@@ -1,9 +1,7 @@
 import { z } from "zod";
 
-export const createUserDetailsZodSchema = z.object({
+const createUserDetailsZodSchema = z.object({
   body: z.object({
-    userId: z.string().optional(),
-    phone: z.string().optional(),
     profileImage: z.string().url().optional(),
     addresses: z
       .array(
@@ -28,3 +26,38 @@ export const createUserDetailsZodSchema = z.object({
       .optional(),
   }),
 });
+
+// user.validation.ts
+const ProfileUpdateSchema = z.object({
+  body: z.object({
+    profileImage: z.string().url().optional(),
+    address: z
+      .object({
+        street: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        country: z.string().optional(),
+        postalCode: z.string().optional(),
+        isDefault: z.boolean().optional(),
+        _id: z.string().optional(), // For existing address updates
+      })
+      .optional(),
+  }),
+});
+
+const AddressSchema = z.object({
+  body: z.object({
+    street: z.string().min(1, "Street is required"),
+    city: z.string().min(1, "City is required"),
+    state: z.string().min(1, "State is required"),
+    country: z.string().min(1, "Country is required"),
+    postalCode: z.string().min(1, "Postal code is required"),
+    isDefault: z.boolean().default(false),
+  }),
+});
+
+export const userZodValidation = {
+  createUserDetailsZodSchema,
+  ProfileUpdateSchema,
+  AddressSchema,
+};

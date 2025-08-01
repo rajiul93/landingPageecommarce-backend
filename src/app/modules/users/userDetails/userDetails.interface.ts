@@ -1,15 +1,17 @@
+export interface IAddress {
+  id?: string;
+  label?: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+  isDefault: boolean;
+}
+
 export interface IUserDetails {
-  userId: string; // reference to User
-  phone?: string;
   profileImage?: string;
-  addresses?: {
-    label?: string;
-    street?: string;
-    city?: string;
-    state?: string;
-    postalCode?: string;
-    country?: string;
-  }[];
+  addresses?: IAddress[];
   wishlist?: string[]; // product IDs
   cart?: {
     productId: string;
