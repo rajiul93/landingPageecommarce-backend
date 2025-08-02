@@ -1,23 +1,17 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';  
-import config from './config';
-import app from './app';
- 
- 
-
+// src/server.ts
+import dotenv from 'dotenv';
 dotenv.config();
- 
 
-async function main() {
-  try {
-    await mongoose.connect(config.db_url as string);
-    console.log('✅ Database connected');
-    app.listen(config.port, () => {
-      console.log(`🚀 Server running on http://localhost:${config.port}`);
-    });
-  } catch (error) {
-    console.error('❌ Failed to connect to database', error);
-  }
-}
+import app from './app';
+import { connectDB } from './app/database';
+import config from './config';
+
+const main = async () => {
+  await connectDB();
+
+  app.listen(config.port, () => {
+    console.log(`🚀 Server running at http://localhost:${config.port}`);
+  });
+};
 
 main();
