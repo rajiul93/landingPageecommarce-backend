@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
-import { IUserDetails } from './userDetails.interface';
+import { Schema, model } from 'mongoose'; 
 import { boolean } from 'zod';
+import { IUserDetails } from './userDetails.interface';
 
 
 const userDetailsSchema = new Schema<IUserDetails>(

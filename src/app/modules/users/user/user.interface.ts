@@ -4,7 +4,7 @@ export interface IUser {
   name: string;
   email: string;
   phone:string;
-  userDetails:Types.ObjectId;
+  userDetails?:Types.ObjectId;
   password: string;
   needsPasswordChange?: boolean;
   passwordChangedAt?: Date | null;

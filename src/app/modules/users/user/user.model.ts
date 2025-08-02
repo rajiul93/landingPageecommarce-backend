@@ -12,7 +12,6 @@ const userSchema = new Schema<IUser>(
       required: [true, 'Email is required'], 
       unique: true,
       trim: true,
-      lowercase: true
     },
     password: { 
       type: String, 
@@ -60,8 +59,5 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-// Indexes for better query performance
-userSchema.index({ email: 1 });
-userSchema.index({ status: 1 });
 
 export const UserModel = model<IUser>('User', userSchema);

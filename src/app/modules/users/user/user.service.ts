@@ -9,23 +9,19 @@ import httpStatus from "http-status";
 
 const createUser = async (userData: IUser): Promise<string> => {
   const session = await mongoose.startSession();
-  session.startTransaction();
 
   try {
-    // 1. Check if user exists
+    await session.startTransaction();
+
     const isExist = await UserModel.findOne({ email: userData.email }).session(session);
     if (isExist) {
       throw new AppError(409, "User already exists");
     }
 
-    // 2. Hash password
-    const hashedPassword = await bcrypt.hash(
-      userData.password,
-      Number(config.bcrypt_salt_rounds)
-    );
+    const saltRounds = Number(config.bcrypt_salt_rounds) || 10;
+    const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
-    // 3. Create user (without userDetails initially)
-    const createdUser = await UserModel.create(
+    const [createdUser] = await UserModel.create(
       [
         {
           name: userData.name,
@@ -41,28 +37,35 @@ const createUser = async (userData: IUser): Promise<string> => {
       { session }
     );
 
-    // 4. Create UserDetails referencing userId
     await UserDetails.create(
-      {
-        userId: createdUser[0]._id,    // এখানে দিতে হবে
-        profileImage: "",
-        addresses: [],
-        wishlist: [],
-        cart: [],
-      },
+      [
+        {
+          userId: createdUser._id,
+          profileImage: "",
+          addresses: [],
+          wishlist: [],
+          cart: [],
+        },
+      ],
       { session }
     );
 
-    // 5. Commit
     await session.commitTransaction();
+
     return "User created successfully";
   } catch (error) {
-    await session.abortTransaction();
+    console.error("Create User Error:", error);
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
     throw error;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 };
+
+
+
 // Get all users
 const getAllUsers = async () => {
   const users = await UserModel.find()
