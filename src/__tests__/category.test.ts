@@ -3,10 +3,15 @@ import request from 'supertest';
 import app from '../app';
 import { connectDB } from '../app/database';
 import { Category } from '../app/modules/category/category.model';
- 
+import { generateAdminToken } from '../app/utils/fakeTokenForTest';
+
+let adminToken: string;
 
 beforeAll(async () => {
   await connectDB();
+
+  // এখানে তোমার admin JWT token generate বা mock করো
+  adminToken =generateAdminToken();
 });
 
 beforeEach(async () => {
@@ -28,6 +33,7 @@ describe('Category API', () => {
 
     const res = await request(app)
       .post('/api/categories')
+      .set('Cookie', `accessToken=${adminToken}`)  // <-- cookie সেট করা হয়েছে
       .send(inputData)
       .expect(201);
 
