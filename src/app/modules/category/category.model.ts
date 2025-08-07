@@ -1,20 +1,21 @@
-import { Schema, model } from 'mongoose';
-import { ICategory } from './category.interface';
+import { Schema, model } from "mongoose";
+import { ICategory } from "./category.interface";
 
 const categoryItemSchema = new Schema(
   {
-    title: { type: String, required: true, unique: true },
-    value: { type: String, required: true, unique: true }
+    title: { type: String, required: true },
+    value: { type: String, required: true },
   },
-  { _id: false }  
+  { _id: false }
 );
 
 const categorySchema = new Schema<ICategory>(
   {
     categories: {
-      type: [categoryItemSchema],
+      type: [categoryItemSchema], // ✅ array of category items
+      required: true,
       validate: {
-        validator: function (v: any[]) { 
+        validator: function (v: any[]) {
           const titles = v.map(item => item.title);
           const values = v.map(item => item.value);
           return (
@@ -29,4 +30,4 @@ const categorySchema = new Schema<ICategory>(
   { timestamps: true }
 );
 
-export const Category = model<ICategory>('Category', categorySchema);
+export const Category = model<ICategory>("Category", categorySchema);

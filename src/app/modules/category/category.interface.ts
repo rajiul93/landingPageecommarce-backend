@@ -4,5 +4,5 @@ export interface ICategoryItem {
 }
 
 export interface ICategory {
-  categories: ICategoryItem[];
+  categories: ICategoryItem[];  
 }

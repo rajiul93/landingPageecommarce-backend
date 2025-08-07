@@ -3,10 +3,11 @@ import express, { Application, Request, Response } from 'express';
 
 import cookieParser from 'cookie-parser';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
+import notFound from './app/middleware/notFound';
+import { authRoutes } from './app/modules/auth/auth.route';
+import { categoryRoutes } from './app/modules/category/category.router';
 import { userRoutes } from './app/modules/users/user/user.route';
 import { userDetailsRoutes } from './app/modules/users/userDetails/userDetails.route';
-import { authRoutes } from './app/modules/auth/auth.route';
-import notFound from './app/middleware/notFound';
  
 
 const app: Application = express();
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use('/api/users', userRoutes);
 app.use('/api/users/details', userDetailsRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // test route
 app.get('/', (req: Request, res: Response) => {
