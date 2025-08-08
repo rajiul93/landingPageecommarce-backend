@@ -7,9 +7,16 @@ import { verifyToken } from "../utils/jwtHelpers";
 export const auth = (...requiredRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      // cookie থেকে token নাও
-      const token = req.cookies?.accessToken; 
+      // const token = req.header;
+      const authorization = req.header("authorization");
+      if (!authorization) {
+        return res
+          .status(401)
+          .json({ message: "Unauthorized: No token provided" });
+      }
 
+      const token = authorization.split(" ")[1];
+      console.log("token:" ,token)
       if (!token) {
         return res.status(401).json({
           success: false,
