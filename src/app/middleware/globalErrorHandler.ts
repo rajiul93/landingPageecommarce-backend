@@ -1,7 +1,7 @@
 import { ErrorRequestHandler } from 'express';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  console.error(err);
+  // console.error(err);
 
   // MongoDB Duplicate Key Error Handle
   if (err.code && err.code === 11000) {

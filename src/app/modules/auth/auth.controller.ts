@@ -3,7 +3,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { AuthService } from "./auth.service";
 
-const login = catchAsync(
+const loginUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await AuthService.loginUser(req.body);
 
@@ -24,8 +24,29 @@ const login = catchAsync(
     });
   }
 );
+const loginAdmin = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await AuthService.loginAdmin(req.body);
 
-export const authController = { login };
+    // cookie options
+    const cookieOptions :CookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // production এ secure:true
+      sameSite: "strict",
+    };
+
+    res.cookie("accessToken", result.token, cookieOptions);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "User logged in successfully!",
+      data: result.user,
+    });
+  }
+);
+
+export const authController = { loginUser , loginAdmin  };
 
 // front end use guide :
 // fetch('/api/login', {

@@ -21,7 +21,7 @@ const getAllUsers =catchAsync( async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "User created successfully!",
+    message: "Get all user successfully!",
     data: result,
   });
 })

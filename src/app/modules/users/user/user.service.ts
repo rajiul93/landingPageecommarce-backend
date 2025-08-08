@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
+import httpStatus from "http-status";
 import mongoose from "mongoose";
 import config from "../../../../config";
 import AppError from "../../../error/AppError";
 import { UserDetails } from "../userDetails/userDetails.model";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
-import httpStatus from "http-status";
 
 const createUser = async (userData: IUser): Promise<string> => {
   const session = await mongoose.startSession();
@@ -21,9 +21,22 @@ const createUser = async (userData: IUser): Promise<string> => {
     const saltRounds = Number(config.bcrypt_salt_rounds) || 10;
     const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
-    const [createdUser] = await UserModel.create(
+    const [createdUserDetails] = await UserDetails.create(
+      [
+        { 
+          profileImage: "",
+          addresses: [],
+          wishlist: [],
+          cart: [],
+        },
+      ],
+      { session }
+    );
+
+    await UserModel.create(
       [
         {
+          userDetails:createdUserDetails._id,
           name: userData.name,
           email: userData.email,
           phone: userData.phone,
@@ -37,18 +50,7 @@ const createUser = async (userData: IUser): Promise<string> => {
       { session }
     );
 
-    await UserDetails.create(
-      [
-        {
-          userId: createdUser._id,
-          profileImage: "",
-          addresses: [],
-          wishlist: [],
-          cart: [],
-        },
-      ],
-      { session }
-    );
+
 
     await session.commitTransaction();
 
