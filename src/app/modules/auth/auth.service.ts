@@ -63,7 +63,7 @@ export const AuthService = {
       user: { 
         id: user._id,
         name: user.name,
-        status: user.role,
+        role: user.role,
       },
     };
   },
@@ -129,7 +129,7 @@ export const AuthService = {
       user: { 
         id: user._id,
         name: user.name,
-        status: user.role,
+        role: user.role,
       },
     };
   },

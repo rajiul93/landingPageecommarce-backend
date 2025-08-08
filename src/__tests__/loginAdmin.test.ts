@@ -32,7 +32,7 @@ describe('POST /api/auth/login-admin', () => {
       data: {
         id: expect.any(String),
         name: expect.any(String),
-        status: 'admin',
+        role: 'admin',
       },
     }); 
   });
@@ -56,7 +56,7 @@ describe('POST /api/auth/login', () => {
       data: {
         id: expect.any(String),
         name: expect.any(String),
-        status: 'admin',
+        role: 'admin',
       },
     }); 
   });
