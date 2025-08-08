@@ -32,7 +32,7 @@ const loginAdmin = catchAsync(
     const cookieOptions :CookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // production এ secure:true
-      sameSite: process.env.NODE_ENV === "production" ? "lax": "strict",
+      sameSite:"none",
     };
 
     res.cookie("accessToken", result.token, cookieOptions);

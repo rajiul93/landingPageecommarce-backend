@@ -31,7 +31,7 @@ export const AuthService = {
         httpStatus.FORBIDDEN,
         `Cannot login, user status is ${user.status}`
       );
-    } 
+    }
 
     // 4️⃣ Validate password with bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -53,14 +53,14 @@ export const AuthService = {
       },
       config.jwt_secret,
       {
-        expiresIn: '1d',
+        expiresIn: "1d",
       }
     );
-// expiresIn: config.jwt_expires_in
+    // expiresIn: config.jwt_expires_in
     // 7️⃣ Return safe data (never return password)
     return {
       token,
-      user: { 
+      user: {
         id: user._id,
         name: user.name,
         role: user.role,
@@ -91,13 +91,13 @@ export const AuthService = {
         httpStatus.FORBIDDEN,
         `Cannot login, user status is ${user.status}`
       );
-    } 
+    }
     if (user.role !== USER_ROLES.ADMIN) {
       throw new AppError(
         httpStatus.FORBIDDEN,
         `Cannot login, user status is ${user.role}`
       );
-    } 
+    }
 
     // 4️⃣ Validate password with bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -119,17 +119,18 @@ export const AuthService = {
       },
       config.jwt_secret,
       {
-        expiresIn: '1d',
+        expiresIn: "1d",
       }
     );
-// expiresIn: config.jwt_expires_in
+    // expiresIn: config.jwt_expires_in
     // 7️⃣ Return safe data (never return password)
     return {
       token,
-      user: { 
+      user: {
         id: user._id,
         name: user.name,
         role: user.role,
+        token,
       },
     };
   },
