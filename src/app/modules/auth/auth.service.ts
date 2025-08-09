@@ -64,6 +64,7 @@ export const AuthService = {
         id: user._id,
         name: user.name,
         role: user.role,
+        token:token
       },
     };
   },

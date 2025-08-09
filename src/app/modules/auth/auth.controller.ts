@@ -8,13 +8,7 @@ const loginUser = catchAsync(
     const result = await AuthService.loginUser(req.body);
 
     // cookie options
-    const cookieOptions :CookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // production এ secure:true
-      sameSite: "strict",
-    };
-
-    res.cookie("accessToken", result.token, cookieOptions);
+  
 
     sendResponse(res, {
       statusCode: 200,

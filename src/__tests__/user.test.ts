@@ -1,32 +1,31 @@
-// import mongoose from 'mongoose';
-// import request from 'supertest';
-// import app from '../app';
-// import { connectDB } from '../app/database';
-// import { generateAdminToken } from '../app/utils/fakeTokenForTest';
+import mongoose from 'mongoose';
+import request from 'supertest';
+import app from '../app';
+import { connectDB } from '../app/database';
 
-// beforeAll(async () => {
-//   await connectDB();
-// });
+beforeAll(async () => {
+  await connectDB();
+});
 
-// afterAll(async () => {
-//   await mongoose.connection.close();
-// });
+afterAll(async () => {
+  await mongoose.connection.close();
+});
 
-// describe('POST /api/users', () => {
-//   it('should return success on user creation', async () => {
-//     const res = await request(app)
-//       .post('/api/users')
-//       .send({
-//         name: 'Test User',
-//         email: `test${Date.now()}@mail.com`,
-//         password: '12345678',
-//         phone: '0123456789',
-//       });
+describe('POST /api/users', () => {
+  it('should return success on user creation', async () => {
+    const res = await request(app)
+      .post('/api/users')
+      .send({
+        name: 'Test User',
+        email: `test${Date.now()}@mail.com`,
+        password: '12345678',
+        phone: '0123456789',
+      });
 
-//     expect(res.status).toBe(201);
-//     expect(res.body.success).toBe(true);
-//   });
-// });
+    expect(res.status).toBe(201);
+    expect(res.body.success).toBe(true);
+  });
+});
 
 
 // describe('POST /api/users/all-user', () => {
