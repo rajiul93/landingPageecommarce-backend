@@ -16,3 +16,17 @@ export const generateAdminToken = () => {
 
   return token;
 };
+export const generateUserToken = () => {
+   const token = jwt.sign(
+      {
+        userId: "user._id",
+        role: USER_ROLES.USER,
+      },
+      config.jwt_secret,
+      {
+        expiresIn: '1d',
+      }
+    );
+
+  return token;
+};

@@ -23,7 +23,12 @@ const createCategory = async (payload: ICategory) => {
   return [];
 };
 
+const getAllCategory =async()=>{
+const result = await Category.find()
+return result;
+}
 
 export const categoryService = {
   createCategory,
+  getAllCategory
 };

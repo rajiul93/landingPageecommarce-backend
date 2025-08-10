@@ -7,16 +7,15 @@ import { verifyToken } from "../utils/jwtHelpers";
 export const auth = (...requiredRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      // const token = req.header;
       const authorization = req.header("authorization");
       if (!authorization) {
-        return res
-          .status(401)
-          .json({ message: "Unauthorized: No token provided" });
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized: No token provided",
+        });
       }
 
       const token = authorization.split(" ")[1];
-      console.log("token:" ,token)
       if (!token) {
         return res.status(401).json({
           success: false,
@@ -24,11 +23,9 @@ export const auth = (...requiredRoles: string[]) => {
         });
       }
 
-      // token verify
       const decoded = verifyToken(token, config.jwt_secret);
-      req.user = decoded; // req.user এ attach করলাম
+      req.user = decoded;
 
-      // role check
       if (requiredRoles.length && !requiredRoles.includes(decoded.role)) {
         return res.status(403).json({
           success: false,

@@ -3,18 +3,21 @@ import request from "supertest";
 import app from "../app";
 import { connectDB } from "../app/database";
 import { Category } from "../app/modules/category/category.model";
-import { generateAdminToken } from "../app/utils/fakeTokenForTest";
+import { generateAdminToken, generateUserToken } from "../app/utils/fakeTokenForTest";
 
 let adminToken: string;
+let userToken: string;
 
 beforeAll(async () => {
   await connectDB();
 
-  // এখানে তোমার admin JWT token generate বা mock করো
+  // Generate tokens for admin and user roles
   adminToken = generateAdminToken();
+  userToken = generateUserToken();
 });
 
 beforeEach(async () => {
+  // Clear categories collection before each test
   await Category.deleteMany({});
 });
 
@@ -23,21 +26,66 @@ afterAll(async () => {
 });
 
 describe("Category API", () => {
+
   it("should create category and respond with success and empty data array", async () => {
     const inputData = {
       title: "Electronics",
       value: "electronics",
     };
 
-  const res = await request(app)
+    const res = await request(app)
       .post("/api/categories")
-      .set("Authorization", `Bearer ${adminToken}`) // <-- Cookie এর বদলে Authorization হেডার
+      .set("Authorization", `Bearer ${adminToken}`)
       .send(inputData)
-      .expect(201);expect(201);
+      .expect(201);
 
-    expect(res.body.success).toBe(true);
-    expect(res.body.message).toBe("Category created successfully");
+    expect(res.body).toHaveProperty("success", true);
+    expect(res.body).toHaveProperty("message", "Category created successfully");
     expect(Array.isArray(res.body.data)).toBe(true);
     expect(res.body.data.length).toBe(0);
   }, 15000);
+
+  describe("GET /api/categories", () => {
+
+    it("should return all categories for admin user", async () => {
+      // First create a category so we have data to fetch
+      await Category.create({ title: "Mobile", value: "mobile" });
+
+      const res = await request(app)
+        .get("/api/categories")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(200);
+
+      expect(res.body).toHaveProperty("success", true);
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.length).toBeGreaterThan(0);
+
+      if (res.body.data.length > 0) {
+        expect(res.body.data[0]).toHaveProperty("_id");
+        expect(res.body.data[0]).toHaveProperty("title");
+        expect(res.body.data[0]).toHaveProperty("value");
+      }
+    });
+
+    it("should return 401 if no token provided", async () => {
+      const res = await request(app)
+        .get("/api/categories")
+        .expect(401);
+
+      expect(res.body).toHaveProperty("success", false);
+      expect(res.body).toHaveProperty("message", "Unauthorized: No token provided");
+    });
+
+    it("should return 403 if role is not admin", async () => {
+      const res = await request(app)
+        .get("/api/categories")
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(403);
+
+      expect(res.body).toHaveProperty("success", false);
+      expect(res.body).toHaveProperty("message", "Forbidden: You do not have the required role");
+    });
+
+  });
+
 });
