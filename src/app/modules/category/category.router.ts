@@ -18,5 +18,10 @@ router.get(
   auth(USER_ROLES.ADMIN),
   categoryController.getAllCategory
 );
+router.delete(
+  '/:id',
+  auth(USER_ROLES.ADMIN),
+  categoryController.deleteCategory
+);
 
 export const categoryRoutes = router;

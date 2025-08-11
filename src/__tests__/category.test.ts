@@ -88,4 +88,45 @@ describe("Category API", () => {
 
   });
 
+describe("DELETE /api/categories/:id", () => {
+
+  it("should delete category successfully", async () => {
+    const category = await Category.create({ title: "Laptop", value: "laptop" });
+
+    const res = await request(app)
+      .delete(`/api/categories/${category._id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+
+    expect(res.body).toHaveProperty("success", true);
+    expect(res.body).toHaveProperty("message", "Category delete successfully");
+    expect(res.body.data).toHaveProperty("_id", category._id.toString());
+
+    const check = await Category.findById(category._id);
+    expect(check).toBeNull();
+  });
+
+  it("should return 400 for invalid category ID format", async () => {
+    const res = await request(app)
+      .delete("/api/categories/invalid-id")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(400);
+
+    expect(res.body).toHaveProperty("success", false);
+    expect(res.body).toHaveProperty("message", "Invalid ID format");
+  });
+
+  it("should return 400 if category not found", async () => {
+    const validId = new mongoose.Types.ObjectId().toString(); // valid but non-existing ID
+
+    const res = await request(app)
+      .delete(`/api/categories/${validId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(400);
+
+    expect(res.body).toHaveProperty("success", false);
+    expect(res.body).toHaveProperty("message", "Category not found");
+  });
+
+});
 });
