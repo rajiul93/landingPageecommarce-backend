@@ -27,6 +27,7 @@ afterAll(async () => {
 describe("Category API", () => {
  const testName = `test-category-${Date.now()}`.toLowerCase();
 
+ 
   it("should create brand and respond with success and empty data array", async () => {
     const inputData = {
       title: testName,

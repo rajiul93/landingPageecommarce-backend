@@ -20,7 +20,15 @@ const createBrand = async (payload: IBrand) => {
   await Brand.create(payload);
   return [];
 };
+const getAllBrand = async () => {
+  return await Brand.find();
+};
+const deleteBrand = async (id:string) => {
+  return await Brand.findByIdAndDelete({_id:id});
+};
 
 export const brandService = {
   createBrand,
+  getAllBrand,
+  deleteBrand
 };

@@ -13,5 +13,15 @@ router.post(
   validateRequest(brandValidation.createBrandSchema),
   brandController.createBrand
 );
+router.get(
+  "/",
+  auth(USER_ROLES.ADMIN), 
+  brandController.getAllBrand
+);
+router.delete(
+  "/:id",
+  auth(USER_ROLES.ADMIN), 
+  brandController.deleteBrand
+);
 
 export const brandRoutes = router;
