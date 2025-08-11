@@ -7,7 +7,6 @@ import { brandService } from './brand.service';
 
 const createBrand = catchAsync(async (req: Request, res: Response) => {
   const result = await brandService.createBrand(req.body);
-
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,

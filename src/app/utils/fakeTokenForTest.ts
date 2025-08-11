@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import config from "../../config";
 import { USER_ROLES } from "../../const";
 
 export const generateAdminToken = () => {
    const token = jwt.sign(
       {
-        userId: "user._id",
+        userId:  new mongoose.Types.ObjectId(),
         role: USER_ROLES.ADMIN,
       },
       config.jwt_secret,

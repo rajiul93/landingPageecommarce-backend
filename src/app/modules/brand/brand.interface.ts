@@ -1,5 +1,4 @@
 export interface IBrand {
-  name: string;
-  logo?: string;
-  isActive?: boolean;
+  title: string;
+  value: string;
 }
