@@ -2,6 +2,7 @@
 
 import httpStatus from "http-status";
 import AppError from "../../error/AppError";
+import { RatingModel } from "../comment-rating/rating.model";
 import { IProduct } from "./product.interface";
 import { ProductModel } from "./product.model";
 export type CreateProductPayload = Pick<
@@ -21,12 +22,15 @@ export type CreateProductPayload = Pick<
   | "isDeleted"
 >;
 
-const createProduct = async (payload: CreateProductPayload) => {
+const createProduct = async (payload: CreateProductPayload, id:string) => {
   // slug uniqueness check (Mongoose unique index also helps)
   const existing = await ProductModel.findOne({ slug: payload.slug });
   if (existing) {
     throw new AppError(httpStatus.CONFLICT, "Product slug already exists");
   }
+   const {_id} = await RatingModel.create({
+    productRatings:[]
+  });
 
   const product = await ProductModel.create({
     userId: payload.userId,
@@ -39,7 +43,7 @@ const createProduct = async (payload: CreateProductPayload) => {
     basePrice: payload.basePrice,
     discountPrice: payload.discountPrice,
     currency: payload.currency || "USD",
-    ratings: [],
+    ratings: _id,
     colors: payload.colors || [],
     isActive: payload.isActive ?? true,
     isDeleted: payload.isDeleted ?? false,

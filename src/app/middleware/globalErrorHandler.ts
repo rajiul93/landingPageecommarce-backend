@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 import httpStatus from 'http-status';
+import { ZodError } from 'zod';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // MongoDB Duplicate Key Error Handle
@@ -11,6 +12,19 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     return res.status(httpStatus.BAD_REQUEST).json({
       success: false,
       message,
+    });
+  }
+
+  // Zod validation error handle
+  if (err instanceof ZodError) {
+    const errors = err.issues.map(issue => ({
+      path: issue.path.join('.'),
+      message: issue.message,
+    }));
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: 'Validation failed',
+      errors,
     });
   }
 

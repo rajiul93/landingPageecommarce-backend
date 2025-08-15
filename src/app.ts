@@ -7,6 +7,7 @@ import notFound from './app/middleware/notFound';
 import { authRoutes } from './app/modules/auth/auth.route';
 import { brandRoutes } from './app/modules/brand/brand.routes';
 import { categoryRoutes } from './app/modules/category/category.router';
+import { productRoutes } from './app/modules/products/product.routes';
 import { userRoutes } from './app/modules/users/user/user.route';
 import { userDetailsRoutes } from './app/modules/users/userDetails/userDetails.route';
  
@@ -27,6 +28,7 @@ app.use('/api/users/details', userDetailsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/brand', brandRoutes);
+app.use('/api/products', productRoutes);
 
 // test route
 app.get('/', (req: Request, res: Response) => {

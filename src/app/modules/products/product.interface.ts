@@ -24,7 +24,7 @@ export interface IColor {
 }
 
 export interface IProduct {
-  userId: Types.ObjectId | string; 
+  userId?: Types.ObjectId; 
   title: string;
   slug: string;
   shortDescription?: string;
@@ -35,7 +35,7 @@ export interface IProduct {
   discountPrice?: number;
   currency?: string;
   colors?: IColor[];
-  ratings: Types.ObjectId[];
+  ratings: Types.ObjectId;
   averageRating?: number;
   isActive?: boolean;
   isDeleted?: boolean;

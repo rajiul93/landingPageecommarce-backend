@@ -1,10 +1,11 @@
 // interfaces/rating.interface.ts
 import { Types } from 'mongoose';
-
-export interface IRating {
+export interface IProductRating {
   userId: Types.ObjectId;
-  productId:Types.ObjectId;
   rating: number;
   comment?: string;
   createdAt?: Date;
+}
+export interface IRating {
+  productRatings : IProductRating[]
 }
