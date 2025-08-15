@@ -16,7 +16,7 @@ const app: Application = express();
 
 // middlewares
 app.use(cors({
-  origin: ['http://localhost:5173','http://localhost:5174'],
+  origin: ['http://localhost:5173','http://localhost:5174',"https://landing-admin-dashboard.vercel.app"],
   credentials: true,
 }));
 app.use(express.json());
