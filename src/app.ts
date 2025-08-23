@@ -7,12 +7,14 @@ import notFound from './app/middleware/notFound';
 import { authRoutes } from './app/modules/auth/auth.route';
 import { brandRoutes } from './app/modules/brand/brand.routes';
 import { categoryRoutes } from './app/modules/category/category.router';
+import { platformRoutes } from './app/modules/platform/platform.route';
 import { productRoutes } from './app/modules/products/product.routes';
 import { userRoutes } from './app/modules/users/user/user.route';
 import { userDetailsRoutes } from './app/modules/users/userDetails/userDetails.route';
  
 
 const app: Application = express();
+app.use(express.static('public'));
 
 // middlewares
 app.use(cors({
@@ -29,6 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/brand', brandRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/platform', platformRoutes);
 
 // test route
 app.get('/', (req: Request, res: Response) => {
