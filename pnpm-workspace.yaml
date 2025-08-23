@@ -1,8 +1,0 @@
-packages:
-  - 'apps/*'
-  - 'packages/*'
-
-allowedBuiltDependencies:
-  - bcrypt
-  - mongodb-memory-server
-  - unrs-resolver
